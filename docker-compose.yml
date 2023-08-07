@@ -1,0 +1,59 @@
+version: "3"
+
+# ------------------------------------------------------------------------------
+# Services
+# ------------------------------------------------------------------------------
+services:
+
+  # ----------------------------------------------------------------------------
+  # Controller
+  # ----------------------------------------------------------------------------
+  controller:
+    container_name: prc_ansible_controller
+    build:
+      context: ./controller
+      args:
+        - CENTOS_VER=${CENTOS_VER}
+        - APP_PATH=${APP_PATH}
+    privileged: true # systemctlを使いたい
+    command: /sbin/init
+    volumes:
+      - ./controller:${APP_PATH}
+    working_dir: ${APP_PATH}
+    environment:
+      - TZ=Asia/Tokyo
+    networks:
+      ntw_controller:
+        ipv4_address: ${C_IP}
+    depends_on:
+      - web
+
+  # ----------------------------------------------------------------------------
+  # WEB Server
+  # ----------------------------------------------------------------------------
+  web:
+    container_name: prc_ansible_web
+    build:
+      context: ./web
+      args:
+        - CENTOS_VER=${CENTOS_VER}
+        - APP_PATH=${APP_PATH}
+    privileged: true # systemctlを使いたい
+    ports:
+      - "10080:80"
+    command: /sbin/init
+    environment:
+      - TZ=Asia/Tokyo
+    networks:
+      ntw_controller:
+        ipv4_address: ${W_IP}
+
+# ------------------------------------------------------------------------------
+# Networks
+# ------------------------------------------------------------------------------
+networks:
+  ntw_controller:
+    ipam:
+      driver: default
+      config:
+        - subnet: ${SUBNET}

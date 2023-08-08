@@ -1,0 +1,58 @@
+---
+# 変数は vars_faileに。
+# playbook も入れ子にできる。
+# パスワードなどはvaultを使って暗号化したい。
+# 実際の作業は、tasksでなくてroleに記述するようにする
+
+# ------------------------------------------------------------------------------
+# 通常ユーザによる処理確認
+# ------------------------------------------------------------------------------
+- name: Normal User Play
+  hosts: all
+  # Sudo
+  #become: true
+  tasks:
+    - name: Execute Command
+      shell: echo 'playbook start!' > ~/test
+      register: result_echo
+
+    - name: Confirm
+      debug:
+        msg: "{{ result_echo.stdout }}"
+     
+- name: Web Group Play
+  hosts: web
+  tasks:
+    - name: Execute Command
+      shell: echo 'web!' >> ~/test
+
+- name: DB Group Play
+  hosts: db
+  tasks:
+    - name: Execute Command
+      shell: echo 'db!' >> ~/test
+
+- hosts: all
+  tasks:
+    - name: Execute Command
+      shell: echo 'playbook end!' >> ~/test
+
+# ------------------------------------------------------------------------------
+# sudo ユーザによる処理確認
+# ------------------------------------------------------------------------------
+- name: Super User Play
+  hosts: all
+  # Sudo
+  become: true
+  tasks:
+    - name: Execute Command
+      shell: echo 'playbook root!' >> ~/test_root
+
+# ------------------------------------------------------------------------------
+# Role
+# https://dev.classmethod.jp/articles/introduction_about_role/
+# ------------------------------------------------------------------------------
+- name: Role Play
+  hosts: all
+  roles:
+    - role_test

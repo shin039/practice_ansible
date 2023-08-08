@@ -20,6 +20,7 @@ services:
     volumes:
       - ./controller:${APP_PATH}
     working_dir: ${APP_PATH}
+    hostname: controller
     environment:
       - TZ=Asia/Tokyo
     networks:
@@ -27,6 +28,7 @@ services:
         ipv4_address: ${C_IP}
     depends_on:
       - web
+      - db
 
   # ----------------------------------------------------------------------------
   # WEB Server
@@ -42,11 +44,35 @@ services:
     ports:
       - "10080:80"
     command: /sbin/init
+    hostname: www1
     environment:
       - TZ=Asia/Tokyo
     networks:
       ntw_controller:
         ipv4_address: ${W_IP}
+    depends_on:
+      - db
+
+  # ----------------------------------------------------------------------------
+  # DB Server
+  # ----------------------------------------------------------------------------
+  db:
+    container_name: prc_ansible_db
+    build:
+      context: ./db
+      args:
+        - CENTOS_VER=${CENTOS_VER}
+        - APP_PATH=${APP_PATH}
+    privileged: true # systemctlを使いたい
+    ports:
+      - "13306:3306"
+    command: /sbin/init
+    hostname: db1
+    environment:
+      - TZ=Asia/Tokyo
+    networks:
+      ntw_controller:
+        ipv4_address: ${D_IP}
 
 # ------------------------------------------------------------------------------
 # Networks

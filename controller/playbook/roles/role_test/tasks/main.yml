@@ -1,3 +1,5 @@
 ---
 - name: Execute Command
   shell: echo 'playbook role!' >> ~/test
+
+- include: include-test.yml

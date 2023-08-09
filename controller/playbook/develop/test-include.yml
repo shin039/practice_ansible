@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
+  gather_facts: no
+  tasks:
+    - name: Includes
+      shell: echo 'playbook include!' >> ~/test
+      changed_when: false

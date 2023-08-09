@@ -1,7 +1,6 @@
 ---
 # 変数は vars_faileに。
 # playbook も入れ子にできる。
-# パスワードなどはvaultを使って暗号化したい。
 # 実際の作業は、tasksでなくてroleに記述するようにする
 
 # ------------------------------------------------------------------------------
@@ -9,51 +8,84 @@
 # ------------------------------------------------------------------------------
 - name: Normal User Play
   hosts: all
-  # Sudo
-  #become: true
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   tasks:
-    - name: Execute Command
-      shell: echo 'playbook start!' > ~/test
-      register: result_echo
+    # gathering facts -> ansible_facts変数のデバッグ
+    #- debug: var=ansible_facts
 
+    - name: Execute Command All Start
+      shell: echo 'playbook start!' > ~/test
+      changed_when: false # echoなどはchangedになってしまうので、強制的にfalseにした。
+
+    - name: Echo Test
+      shell: echo 'echo test'
+      changed_when: false
+      # 変数、result_echoにコマンド結果を登録
+      register: result_echo
     - name: Confirm
       debug:
         msg: "{{ result_echo.stdout }}"
+
+    - name: Root Module
+      become: true
+      shell: echo 'playbook root module!' >> ~/test
+      changed_when: false
+
+    - name: Normal User Confirm
+      shell: echo 'ansible user.' > ~/test
+      changed_when: false
      
 - name: Web Group Play
   hosts: web
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   tasks:
-    - name: Execute Command
+    - name: Execute Command Web
       shell: echo 'web!' >> ~/test
+      changed_when: false
 
 - name: DB Group Play
   hosts: db
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   tasks:
-    - name: Execute Command
+    - name: Execute Command Db
       shell: echo 'db!' >> ~/test
+      changed_when: false
 
 - hosts: all
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   tasks:
-    - name: Execute Command
+    - name: Execute Command All End
       shell: echo 'playbook end!' >> ~/test
+      changed_when: false
 
 # ------------------------------------------------------------------------------
 # sudo ユーザによる処理確認
 # ------------------------------------------------------------------------------
 - name: Super User Play
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   hosts: all
+  gather_facts: no
   # Sudo
   become: true
   tasks:
     - name: Execute Command
-      shell: echo 'playbook root!' >> ~/test_root
+      shell: echo 'playbook root!' > ~/test_root
+      changed_when: false
 
 # ------------------------------------------------------------------------------
 # Role
 # https://dev.classmethod.jp/articles/introduction_about_role/
 # ------------------------------------------------------------------------------
 - name: Role Play
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
   hosts: all
+  gather_facts: no
   roles:
     - role_test
 

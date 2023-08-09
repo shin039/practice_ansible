@@ -1,0 +1,17 @@
+# ------------------------------------------------------------------------------
+# インベントリ毎の変数定義
+# ------------------------------------------------------------------------------
+
+# NOTE: パスワードなどはvaultを使って暗号化したい。
+
+ansible_connection: ssh
+ansible_user: ansible
+
+# 実行時にansible-playbook -i hostsファイル playbook.yml -Kk で代用できる。
+# -K sudoのパスワード
+# -k ユーザのパスワード
+ansible_ssh_pass: ansible
+ansible_sudo_pass: ansible
+
+# 初回SSHの時にfingerprintをチェックしないようにする
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

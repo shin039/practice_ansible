@@ -1,3 +1,4 @@
 ---
 - name: Execute Command
   shell: echo 'playbook role include!' >> ~/test
+  changed_when: false

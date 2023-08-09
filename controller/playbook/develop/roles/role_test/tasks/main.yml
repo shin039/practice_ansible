@@ -1,5 +1,6 @@
 ---
 - name: Execute Command
   shell: echo 'playbook role!' >> ~/test
+  changed_when: false
 
 - include: include-test.yml

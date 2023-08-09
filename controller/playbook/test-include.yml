@@ -1,5 +1,0 @@
----
-- hosts: all
-  tasks:
-    - name: Includes
-      shell: echo 'playbook include!' >> ~/test

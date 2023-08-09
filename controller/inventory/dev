@@ -1,16 +1,26 @@
 # 実行時にansible-playbook -i hostsファイル playbook.yml
+# 実行時にansible-playbook -i hostsファイル playbook.yml --ask-vault-pass vaultで暗号化したファイルの複合パス
 # 実行時にansible-playbook -i hostsファイル playbook.ym -v でタスクの値の表示
 
+# - - - - - - - - - - 
+# webグループ
+# - - - - - - - - - - 
 [web]
 # ホスト名のみで指定しておきたい。
 #www1 ansible_host=192.168.100.110
 www1
 
+# - - - - - - - - - - 
+# dbグループ
+# - - - - - - - - - - 
 [db]
 # ホスト名のみで指定しておきたい。
 #db1 ansible_host=192.168.100.150
 db1
 
+# - - - - - - - - - - 
+# 全体の変数
+# - - - - - - - - - - 
 [all:vars]
 env_name=develop
 

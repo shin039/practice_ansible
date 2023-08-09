@@ -1,0 +1,32 @@
+---
+
+# [SUDO] 共通設定
+- name: BASE Configuration
+  become: true
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
+  roles:
+    - base
+
+# [SUDO] Web Server
+- name: Web Server Configuration
+  become: true
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
+  roles:
+    - web
+
+# [SUDO] DB Server
+- name: Web Server Configuration
+  become: true
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - "../../env_vars/{{ env_name }}.yml"
+  roles:
+    - db
+

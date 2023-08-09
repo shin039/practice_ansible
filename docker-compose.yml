@@ -27,8 +27,8 @@ services:
       ntw_controller:
         ipv4_address: ${C_IP}
     depends_on:
-      - web
-      - db
+      - www1
+      - db1
 
   # ----------------------------------------------------------------------------
   # WEB Server
@@ -51,7 +51,7 @@ services:
       ntw_controller:
         ipv4_address: ${W_IP}
     depends_on:
-      - db
+      - db1
 
   # ----------------------------------------------------------------------------
   # DB Server

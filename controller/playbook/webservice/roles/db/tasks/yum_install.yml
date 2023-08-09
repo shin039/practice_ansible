@@ -1,0 +1,6 @@
+---
+- name: PostgreSQL
+  yum: 
+    name: postgresql-server
+    state: latest
+

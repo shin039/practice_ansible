@@ -1,0 +1,10 @@
+---
+- name: user add -> test
+  user:
+    name: test
+    # リテラルもいける。※シングルクォートで値を囲う。
+    # password:  "{{ 'test_password' | password_hash('sha512') }}"
+    # こちらは変数を使っている。
+    password:  "{{ test_password | password_hash('sha512') }}"
+    shell: /sbin/nologin
+    group: wheel
